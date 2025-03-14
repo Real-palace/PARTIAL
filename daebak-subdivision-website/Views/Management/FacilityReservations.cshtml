@@ -1,0 +1,86 @@
+﻿@model List<daebak_subdivision_website.ViewModels.FacilityReservationViewModel>
+
+@{
+    ViewData["Title"] = "Facility Reservations";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#94B0DF',
+                        secondary: '#356480',
+                        tertiary: '#2c3e50',
+                        light: '#FCFDFF',
+                    }
+                },
+                fontFamily: {
+                    sans: ['Poppins', 'sans-serif'],
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-light font-sans min-h-screen p-6">
+    <div class="container mx-auto">
+        <div class="flex justify-between items-center mb-6">
+            <a asp-action="Index" class="bg-secondary text-white px-4 py-2 rounded-lg flex items-center gap-2 shadow hover:bg-tertiary">
+                <i class="bi bi-house-door-fill"></i> Home
+            </a>
+            <h2 class="text-xl font-bold text-tertiary">Facility Reservations</h2>
+            <a asp-action="Create" class="bg-primary text-white px-4 py-2 rounded-lg flex items-center gap-2 shadow hover:bg-secondary">
+                <i class="bi bi-plus-circle"></i> Add Reservation
+            </a>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <table class="w-full border-collapse">
+                <thead>
+                    <tr class="bg-primary text-white">
+                        <th class="p-3">Facility</th>
+                        <th class="p-3">User</th>
+                        <th class="p-3">Date</th>
+                        <th class="p-3">Status</th>
+                        <th class="p-3">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var reservation in Model)
+                    {
+                        <tr class="border-b hover:bg-gray-100">
+                            <td class="p-3">@reservation.FacilityName</td>
+                            <td class="p-3">@reservation.UserName</td>
+                            <td class="p-3">@reservation.ReservationDate.ToString("yyyy-MM-dd HH:mm")</td>
+                            <td class="p-3">
+                                <span class="px-3 py-1 rounded-full text-white text-xs font-semibold"
+                                      style="background-color: @(reservation.Status == "Approved" ? "#68D2E8" : reservation.Status == "Pending" ? "#FFC65B" : "#FF7D7D")">
+                                    @reservation.Status
+                                </span>
+                            </td>
+                            <td class="p-3 flex gap-2 justify-center">
+                                <a asp-action="Edit" asp-route-id="@reservation.ReservationId" class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">
+                                    <i class="bi bi-pencil-square"></i> Edit
+                                </a>
+                                <form asp-action="Delete" asp-route-id="@reservation.ReservationId" method="post" class="inline">
+                                    <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                                            onclick="return confirm('Are you sure you want to delete this reservation?')">
+                                        <i class="bi bi-trash"></i> Delete
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
